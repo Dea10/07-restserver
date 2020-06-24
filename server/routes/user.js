@@ -6,7 +6,30 @@ const bodyParser = require('body-parser');
 const app = express();
 
 app.get('/user', function (req, res) {
-    res.json('getUser')
+
+    let from = req.query.from || 0;
+    from = Number(from);
+
+    let limit = req.query.limit || 5;
+    limit = Number(limit);
+
+    User.find({})
+        .skip(from)
+        .limit(limit)
+        .exec((err, users) => {
+            if (err) {
+                res.status(400).json({
+                    ok: false,
+                    err
+                });
+            }
+
+            res.json({
+                ok: true,
+                users
+            })
+        })
+
 })
 
 app.post('/user', function (req, res) {
@@ -50,7 +73,7 @@ app.post('/user', function (req, res) {
 
 app.put('/user/:id', function (req, res) {
     let id = req.params.id;
-    let body = _.pick(req.body, ['name', 'email', 'img', 'role', 'status']);    
+    let body = _.pick(req.body, ['name', 'email', 'img', 'role', 'status']);
 
     User.findByIdAndUpdate(id, body, { new: true, runValidators: true }, (err, userDB) => {
 
