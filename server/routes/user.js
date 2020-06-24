@@ -1,5 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
+const _ = require('underscore');
 const User = require('../model/user');
 const bodyParser = require('body-parser');
 const app = express();
@@ -20,9 +21,9 @@ app.post('/user', function (req, res) {
     });
 
     user.save((err, userDB) => {
-        if(err) {
+        if (err) {
             res.status(400).json({
-                ok:false,
+                ok: false,
                 err
             });
         }
@@ -49,9 +50,22 @@ app.post('/user', function (req, res) {
 
 app.put('/user/:id', function (req, res) {
     let id = req.params.id;
-    res.json({
-        id
-    })
+    let body = _.pick(req.body, ['name', 'email', 'img', 'role', 'status']);    
+
+    User.findByIdAndUpdate(id, body, { new: true, runValidators: true }, (err, userDB) => {
+
+        if (err) {
+            res.status(400).json({
+                ok: false,
+                err
+            });
+        }
+
+        res.json({
+            ok: true,
+            user: userDB
+        })
+    });
 })
 
 app.delete('/user', function (req, res) {
