@@ -1,6 +1,7 @@
 require('./config/config.js')
 
 const express = require('express')
+const mongoose = require('mongoose');
 const app = express()
 const bodyParser = require('body-parser')
 
@@ -10,37 +11,19 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
-app.get('/user', function (req, res) {
-    res.json('getUser')
-})
-
-app.post('/user', function (req, res) {
-    let user = req.body
-
-    if(user.name === undefined) {
-        res.status(400).json({
-            ok: false,
-            msg: 'User name required!'
-        })
-    } else {
-        res.json({
-            user
-        })
-    }
-
-})
-
-app.put('/user/:id', function (req, res) {
-    let id = req.params.id;
-    res.json({
-        id
-    })
-})
-
-app.delete('/user', function (req, res) {
-    res.json('deleteUser')
-})
+app.use(require('./routes/user'))
 
 app.listen(process.env.PORT, () => {
     console.log(`Listening on port: ${process.env.PORT}`)
 })
+
+// mongoose.connect('mongodb://localhost:27017/coffee', (err, res) => {
+//     if(err) throw err;
+
+//     console.log('DB Connection success!')
+// });
+
+mongoose.connect('mongodb://localhost:27017/coffee', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
