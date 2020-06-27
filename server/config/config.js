@@ -11,7 +11,7 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'dev'
 if(process.env.NODE_ENV === 'dev') {
     DBURL = 'mongodb://localhost:27017/coffee';
 } else {
-    DBURL = 'mongodb+srv://dea_test:7mB9SIVvpHHsVpzx@cluster0-t4eii.mongodb.net/coffee'
+    DBURL = process.env.MONGO_URL
 }
 
 process.env.DBURL = DBURL
