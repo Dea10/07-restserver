@@ -23,7 +23,7 @@ app.listen(process.env.PORT, () => {
 //     console.log('DB Connection success!')
 // });
 
-mongoose.connect('mongodb://localhost:27017/coffee', 
+mongoose.connect(process.env.DBURL, 
 {
   useNewUrlParser: true,
   useUnifiedTopology: true,
